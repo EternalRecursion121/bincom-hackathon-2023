@@ -1,7 +1,15 @@
 <script lang="ts">
   import "../app.css";
+  import Setup from "$lib/Setup.svelte";
+
+  let currentMode = 'setup';
+  let setupData = {};
+
+
 </script>
 
-<div class="flex w-screen h-screen justify-center items-center">
-    <h1 class="bold underline text-green-500 text-xl">TEST</h1>
+<div class="w-screen h-screen bg-gray-900">
+    {#if currentMode === 'setup'}
+        <Setup {setupData}/>
+    {/if}
 </div>
