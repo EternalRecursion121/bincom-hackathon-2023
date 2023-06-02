@@ -1,2 +1,7 @@
-<h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
+<script lang="ts">
+  import "../app.css";
+</script>
+
+<div class="flex w-screen h-screen justify-center items-center">
+    <h1 class="bold underline text-green-500 text-xl">INTERVEIWW</h1>
+</div>
