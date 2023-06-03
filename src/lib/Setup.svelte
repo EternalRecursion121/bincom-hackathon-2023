@@ -6,7 +6,7 @@
   const dispatch = createEventDispatcher();
 
   let jobDescription = '';
-  let numQuestions = 5;
+  let numQuestions = 3;
   let manualEntry = false;
   let timeLimit = '30';
 
@@ -29,7 +29,7 @@
     </div>
 
     <div>
-      <label for="number-of-questions" class="block text-lg">Number of Questions (1-15)</label>
+      <label for="number-of-questions" class="block text-lg">Number of Questions (anything more than 3 or 4 may break due to vercel function limitations)</label>
       <input id="number-of-questions" type="number" min="1" max="15" bind:value={numQuestions} class="w-full px-2 py-1 mt-1 bg-gray-800 rounded-md text-white outline-none" />
     </div>
 
