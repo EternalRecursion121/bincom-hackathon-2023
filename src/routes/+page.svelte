@@ -4,11 +4,12 @@
   import Setup from '$lib/Setup.svelte';
   import InterviewQuestion from '$lib/InterviewQuestion.svelte';
   import Feedback from '$lib/Feedback.svelte';
+  import Loading from '$lib/Loading.svelte';
 
   let currentPage = 'setup';
   let setupData = {};
   let currentQuestionIndex = 0;
-  let timeLimit = 5;
+  let timeLimit = 30;
   let questions = [];
 
 
@@ -20,8 +21,8 @@
 
   async function startInterview(event) {
     setupData = event.detail;
-    currentPage = 'interview';
 
+    currentPage = 'loading';
     console.log(setupData)
     const response = await fetch('/api/generate-questions', {
       method: 'POST',
@@ -31,6 +32,8 @@
       body: JSON.stringify(setupData)
     });
 
+    
+    console.log(currentPage)
     const data = await response.json();
     console.log(data);
 
@@ -42,9 +45,7 @@
   function nextQuestion() {
     if (currentQuestionIndex < questions.length - 1) {
       currentQuestionIndex++;
-      console.log(recordedAudioData, recordedVideoData)
     } else {
-      console.log(recordedAudioData, recordedVideoData)
       currentPage = 'feedback';
     }
   }
@@ -58,6 +59,10 @@
     <InterviewQuestion {timeLimit} question={questions[currentQuestionIndex]} on:timeUp={nextQuestion} />
   {:else if currentPage === 'feedback'}
     <Feedback/>
+  {:else if currentPage === 'loading'}
+    <Loading/>
+  {:else}
+    <h1 class="text-4xl text-white">Something went wrong.</h1>
   {/if}
 </div>
 
