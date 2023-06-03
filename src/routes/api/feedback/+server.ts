@@ -29,10 +29,10 @@ export const POST = (async ({ request }) => {
 
     try {
     // Extract the questions and audio data from the request body
-    // Generate feedback using the GPT-4 API
     let response = await openai.createChatCompletion({
         model: "gpt-3.5-turbo",
         messages: messages,
+        max_tokens: 200,
     });
 
 
