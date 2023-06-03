@@ -11,29 +11,6 @@
   let currentQuestionIndex = 0;
   let timeLimit = 5;
 
-  async function uploadToAPI() {
-    let formData = new FormData();
-
-    recordedChunks.forEach((chunk, index) => {
-      // Blob constructor for creating file-like object of immutable, raw data
-      let blob = new Blob([chunk], {type: 'video/webm'});
-
-      // Append file to form data
-      formData.append('file' + index, blob);
-    });
-
-    // Make the request
-    let response = await fetch('https://your-api-endpoint.com', {
-      method: 'POST',
-      body: formData
-    });
-
-    if(response.ok) {
-      console.log("Successfully uploaded files");
-    } else {
-      console.log("Error uploading files: ", response.status);
-    }
-  }
 
 
   onMount(async () => {
@@ -55,6 +32,7 @@
     });
     questions = await response.json();
     console.log(questions);
+    currentPage = 'interview';
   }
 
   function nextQuestion() {
@@ -73,7 +51,7 @@
   {#if currentPage === 'setup'}
     <Setup on:submit={startInterview} />
   {:else if currentPage === 'interview' && questions.length > 0}
-    <InterviewQuestion {timeLimit} question={questions[currentQuestionIndex].body} on:timeUp={nextQuestion} on:recorded={handleRecordedData} />
+    <InterviewQuestion {timeLimit} question={questions[currentQuestionIndex].body} on:timeUp={nextQuestion} />
   {:else if currentPage === 'feedback'}
     <Feedback/>
   {/if}
