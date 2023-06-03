@@ -11,6 +11,9 @@
   
   let interval;
   let videoStream;
+  let audioStream;
+  let mediaRecorder;
+  let recordedChunks = [];
   let videoElement;
 
   let cameraOn = true;
@@ -19,6 +22,9 @@
     try {
       videoStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
       videoElement.srcObject = videoStream;
+
+      audioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      mediaRecorder = new MediaRecorder(audioStream);
     } catch (err) {
       console.log(err);
     }
@@ -35,15 +41,36 @@
 
     if (cameraOn) {
       await getMedia();
+    } else if (mediaRecorder) {
+      mediaRecorder.stop();
+      // Convert the recorded audio data into a format suitable for Whisper.
+      const blob = new Blob(recordedChunks, { type: mediaRecorder.mimeType });
+      console.log(URL.createObjectURL(blob));
+    }
+  }
+
+  function handleDataAvailable(e) {
+    if (e.data.size > 0) {
+      recordedChunks.push(e.data);
     }
   }
 
   onMount(async () => {
     interval = setInterval(() => {
       countdown -= 1;
+      
+      if (countdown === 1 && mediaRecorder.state === 'inactive') {
+        mediaRecorder.ondataavailable = handleDataAvailable;
+        mediaRecorder.start();
+      }
+
       if (countdown <= 0) {
         dispatch('timeUp');
         countdown = timeLimit;
+
+        if (mediaRecorder.state === 'recording') {
+          mediaRecorder.stop();
+        }
       }
     }, 1000);
 
@@ -54,6 +81,9 @@
     clearInterval(interval);
     if (videoStream) {
       videoStream.getTracks().forEach(track => track.stop());
+    }
+    if (mediaRecorder) {
+      mediaRecorder.stop();
     }
   });
 </script>
@@ -98,11 +128,12 @@
   }
 
   @keyframes countdown {
-      from {
-        stroke-dashoffset: 0px;
-      }
-      to {
-        stroke-dashoffset: 113px;
-      }
+    from {
+      stroke-dashoffset: 0px;
     }
+    to {
+      stroke-dashoffset: 113px;
+    }
+  }
 </style>
+     
