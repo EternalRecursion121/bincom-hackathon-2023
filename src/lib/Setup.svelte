@@ -10,10 +10,10 @@
 </script>
 
 <div class="flex flex-col items-center justify-center h-screen bg-gray-900 text-white">
-  <form class="flex flex-col gap-6" on:submit|preventDefault={submitSetup}>
+  <form class="flex flex-col gap-6 w-72" on:submit|preventDefault={submitSetup}>
     <div>
       <label for="job-description" class="block text-lg">Job Description</label>
-      <textarea id="job-description" bind:value={jobDescription} rows="4" class="w-full px-2 py-1 mt-1 bg-gray-800 rounded-md text-white"></textarea>
+      <textarea id="job-description" bind:value={jobDescription} rows="4" class="w-full px-2 py-1 mt-1 bg-gray-800 rounded-md text-white h-[150px] resize-none"></textarea>
     </div>
 
     <div>
