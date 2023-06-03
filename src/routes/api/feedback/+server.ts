@@ -19,7 +19,7 @@ const configuration = new Configuration({
 
 const openai = new OpenAIApi(configuration);
 
-export const POST = (async ({ request }) => {
+export const POST = (async ({ request }) => {   
     const { jobDescription, question, answer } = await request.json();
 
     const messages = [{role: "system", content: "You are JobGPT- a helpful AI assistant designed to aid users in their interview preparation."},
@@ -32,7 +32,7 @@ export const POST = (async ({ request }) => {
     let response = await openai.createChatCompletion({
         model: "gpt-3.5-turbo",
         messages: messages,
-        max_tokens: 100,
+        max_tokens: 120,
     });
 
 
