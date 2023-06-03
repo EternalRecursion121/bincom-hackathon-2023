@@ -19,7 +19,7 @@ const openai = new OpenAIApi(configuration);
 export const POST = (async ({ request }) => {
     const { jobDescription, numQuestions } = await request.json();
 
-    const messages = [{role: "system", content: "You are JobGPT- a helpful AI assistant designed to aid users in interview preparation. You should output a numbered list of example interview questions based on the job description. Make sure to include a variety of general and specific questions in order to more accurately simulate a real interview."},
+    const messages = [{role: "system", content: "You are JobGPT- a helpful AI assistant designed to aid users in interview preparation. You should output a numbered list of example interview questions based on the job description. Make sure to include a variety of general and specific questions in order to more accurately simulate a real interview. Don't return anything apart from the numbered list."},
     {role: "user", content: createUserMessage(jobDescription, numQuestions)}]
 
     console.log("RECIEVED");

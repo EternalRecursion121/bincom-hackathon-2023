@@ -38,6 +38,7 @@
     console.log(data);
 
     questions = data.questions;
+    // questions = ["q1", "q2", "q3", "q4", "q5", "q6", "q7", "q8"];
     currentPage = 'interview';
   }
 
@@ -49,6 +50,15 @@
       currentPage = 'feedback';
     }
   }
+
+  function handleSubmit(event) {
+    event.preventDefault();
+    answer = event.detail.answer;
+    question = event.detail.question;
+
+
+    nextQuestion();
+  }
 </script>
 
 
@@ -56,7 +66,7 @@
   {#if currentPage === 'setup'}
     <Setup on:submit={startInterview} />
   {:else if currentPage === 'interview' && questions.length > 0}
-    <InterviewQuestion {timeLimit} question={questions[currentQuestionIndex]} on:timeUp={nextQuestion} />
+    <InterviewQuestion {timeLimit} question={questions[currentQuestionIndex]} on:submit={handleSubmit} />
   {:else if currentPage === 'feedback'}
     <Feedback/>
   {:else if currentPage === 'loading'}
