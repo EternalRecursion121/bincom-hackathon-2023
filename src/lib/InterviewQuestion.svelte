@@ -13,88 +13,88 @@
   let answer = '';
 
   let interval;
-  let videoStream;
-  let audioStream;
-  let mediaRecorder;
-  let videoElement;
+  // let videoStream;
+  // let audioStream;
+  // let mediaRecorder;
+  // let videoElement;
 
-  let mediaRecorderVideo;
-  let mediaRecorderAudio;
-  let recordedChunksVideo = [];
-  let recordedChunksAudio = [];
+  // let mediaRecorderVideo;
+  // let mediaRecorderAudio;
+  // let recordedChunksVideo = [];
+  // let recordedChunksAudio = [];
 
   
-  async function getMedia() {
-    try {
-      videoStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-      videoElement.srcObject = videoStream;
+  // async function getMedia() {
+  //   try {
+  //     videoStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+  //     videoElement.srcObject = videoStream;
 
-      audioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      mediaRecorder = new MediaRecorder(audioStream);
-    } catch (err) {
-      console.log(err);
-    }
-  }
+  //     audioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+  //     mediaRecorder = new MediaRecorder(audioStream);
+  //   } catch (err) {
+  //     console.log(err);
+  //   }
+  // }
 
-  async function toggleCamera() {
-    cameraOn = !cameraOn;
+  // async function toggleCamera() {
+  //   cameraOn = !cameraOn;
 
-    if (videoStream) {
-      videoStream.getTracks().forEach(track => {
-        track.stop();
-      });
-    }
+  //   if (videoStream) {
+  //     videoStream.getTracks().forEach(track => {
+  //       track.stop();
+  //     });
+  //   }
 
-    if (cameraOn) {
-      await getMedia();
-    } else if (mediaRecorder) {
-      mediaRecorder.stop();
-      // Convert the recorded audio data into a format suitable for Whisper.
-      const blob = new Blob(recordedChunks, { type: mediaRecorder.mimeType });
-      console.log(URL.createObjectURL(blob));
-    }
-  }
+  //   if (cameraOn) {
+  //     await getMedia();
+  //   } else if (mediaRecorder) {
+  //     mediaRecorder.stop();
+  //     // Convert the recorded audio data into a format suitable for Whisper.
+  //     const blob = new Blob(recordedChunks, { type: mediaRecorder.mimeType });
+  //     console.log(URL.createObjectURL(blob));
+  //   }
+  // }
 
   onMount(async () => {
-    const videoStream = await navigator.mediaDevices.getUserMedia({ video: true });
-    const audioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    // const videoStream = await navigator.mediaDevices.getUserMedia({ video: true });
+    // const audioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
 
-    videoElement.srcObject = videoStream;
-    videoElement.play();
+    // videoElement.srcObject = videoStream;
+    // videoElement.play();
 
-    mediaRecorderVideo = new MediaRecorder(videoStream, {mimeType: 'video/webm; codecs=vp9'});
-    mediaRecorderAudio = new MediaRecorder(audioStream, {mimeType: 'audio/webm'});
+    // mediaRecorderVideo = new MediaRecorder(videoStream, {mimeType: 'video/webm; codecs=vp9'});
+    // mediaRecorderAudio = new MediaRecorder(audioStream, {mimeType: 'audio/webm'});
 
-    mediaRecorderVideo.ondataavailable = event => {
-      if (event.data.size > 0) {
-        recordedChunksVideo.push(event.data);
-      }
-    };
+    // mediaRecorderVideo.ondataavailable = event => {
+    //   if (event.data.size > 0) {
+    //     recordedChunksVideo.push(event.data);
+    //   }
+    // };
 
-    mediaRecorderAudio.ondataavailable = event => {
-      if (event.data.size > 0) {
-        recordedChunksAudio.push(event.data);
-      }
-    };
+    // mediaRecorderAudio.ondataavailable = event => {
+    //   if (event.data.size > 0) {
+    //     recordedChunksAudio.push(event.data);
+    //   }
+    // };
 
-    mediaRecorderVideo.start();
-    mediaRecorderAudio.start();
+    // mediaRecorderVideo.start();
+    // mediaRecorderAudio.start();
 
     interval = setInterval(() => {
       if (countdown-- <= 0) {
         clearInterval(interval);
-        mediaRecorderVideo.stop();
-        mediaRecorderAudio.stop();
+        // mediaRecorderVideo.stop();
+        // mediaRecorderAudio.stop();
 
-        // Create blobs from the recorded chunks
-        const videoBlob = new Blob(recordedChunksVideo, {type: 'video/webm'});
-        const audioBlob = new Blob(recordedChunksAudio, {type: 'audio/webm'});
+        // // Create blobs from the recorded chunks
+        // const videoBlob = new Blob(recordedChunksVideo, {type: 'video/webm'});
+        // const audioBlob = new Blob(recordedChunksAudio, {type: 'audio/webm'});
 
-        // Dispatch the event with the recorded data
-        dispatch('recorded', {video: videoBlob, audio: audioBlob});
-        countdown = timeLimit;
-        recordedChunksVideo = [];
-        recordedChunksAudio = [];
+        // // Dispatch the event with the recorded data
+        // dispatch('recorded', {video: videoBlob, audio: audioBlob});
+        // countdown = timeLimit;
+        // recordedChunksVideo = [];
+        // recordedChunksAudio = [];
         dispatch('timeUp')
       }
     }, 1000);

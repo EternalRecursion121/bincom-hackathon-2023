@@ -28,13 +28,13 @@ export const POST = (async ({ request }) => {
     // Extract the questions and audio data from the request body
     // Generate feedback using the GPT-4 API
     let response = await openai.createChatCompletion({
-        model: "gpt-4",
+        model: "gpt-3.5-turbo",
         messages: messages,
     });
 
     console.log(response.data.choices[0].message)
-    
-    const questions = response.data.choices[0].message.content.split(/\n?\d+\.\s*/).filter(Boolean)
+
+    const questions = response.data.choices[0].message.content.split(/\n?\d+\.\s*/).filter(Boolean);
 
     console.log("SENT")
     console.log(questions)

@@ -33,12 +33,12 @@
       <input id="number-of-questions" type="number" min="1" max="15" bind:value={numberOfQuestions} class="w-full px-2 py-1 mt-1 bg-gray-800 rounded-md text-white outline-none" />
     </div>
 
-    <div>
+    <!-- <div>
       <label class="block text-lg">
         <input type="checkbox" bind:checked={manualEntry} class="mr-2 outline-none" />
         Manual Entry?
       </label>
-    </div>
+    </div> -->
 
     <div>
       <label for="time-limit" class="block text-lg">Time Limit</label>
