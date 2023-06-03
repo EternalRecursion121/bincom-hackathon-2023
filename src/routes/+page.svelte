@@ -3,8 +3,10 @@
   import { onMount } from 'svelte';
   import Setup from '$lib/Setup.svelte';
   import InterviewQuestion from '$lib/InterviewQuestion.svelte';
+  import Feedback from '$lib/Feedback.svelte'
 
-  let currentPage = 'interview';
+
+  let currentPage = 'feedback';
   let setupData = {};
   let questions = [];
   let currentQuestionIndex = 0;
@@ -37,7 +39,7 @@
   {:else if currentPage === 'interview' && questions.length > 0}
     <InterviewQuestion {timeLimit} question={questions[currentQuestionIndex].body} on:timeUp={nextQuestion} />
   {:else if currentPage === 'feedback'}
-    <div>Feedback</div>
+    <Feedback/>
   {/if}
 </div>
 
