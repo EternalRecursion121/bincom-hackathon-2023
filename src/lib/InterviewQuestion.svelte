@@ -2,6 +2,8 @@
   import { onMount, onDestroy } from 'svelte';
   import { createEventDispatcher } from 'svelte';
 
+  export let cameraOn = true;
+
   const dispatch = createEventDispatcher();
 
   export let question = '';
@@ -13,10 +15,13 @@
   let videoStream;
   let audioStream;
   let mediaRecorder;
-  let recordedChunks = [];
   let videoElement;
 
-  let cameraOn = true;
+  let mediaRecorderVideo;
+  let mediaRecorderAudio;
+  let recordedChunksVideo = [];
+  let recordedChunksAudio = [];
+
   
   async function getMedia() {
     try {
@@ -49,42 +54,53 @@
     }
   }
 
-  function handleDataAvailable(e) {
-    if (e.data.size > 0) {
-      recordedChunks.push(e.data);
-    }
-  }
-
   onMount(async () => {
-    interval = setInterval(() => {
-      countdown -= 1;
-      
-      if (countdown === 1 && mediaRecorder.state === 'inactive') {
-        mediaRecorder.ondataavailable = handleDataAvailable;
-        mediaRecorder.start();
+    const videoStream = await navigator.mediaDevices.getUserMedia({ video: true });
+    const audioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+
+    videoElement.srcObject = videoStream;
+    videoElement.play();
+
+    mediaRecorderVideo = new MediaRecorder(videoStream, {mimeType: 'video/webm; codecs=vp9'});
+    mediaRecorderAudio = new MediaRecorder(audioStream, {mimeType: 'audio/webm'});
+
+    mediaRecorderVideo.ondataavailable = event => {
+      if (event.data.size > 0) {
+        recordedChunksVideo.push(event.data);
       }
+    };
 
-      if (countdown <= 0) {
-        dispatch('timeUp');
+    mediaRecorderAudio.ondataavailable = event => {
+      if (event.data.size > 0) {
+        recordedChunksAudio.push(event.data);
+      }
+    };
+
+    mediaRecorderVideo.start();
+    mediaRecorderAudio.start();
+
+    interval = setInterval(() => {
+      if (countdown-- <= 0) {
+        clearInterval(interval);
+        mediaRecorderVideo.stop();
+        mediaRecorderAudio.stop();
+
+        // Create blobs from the recorded chunks
+        const videoBlob = new Blob(recordedChunksVideo, {type: 'video/webm'});
+        const audioBlob = new Blob(recordedChunksAudio, {type: 'audio/webm'});
+
+        // Dispatch the event with the recorded data
+        dispatch('recorded', {video: videoBlob, audio: audioBlob});
         countdown = timeLimit;
-
-        if (mediaRecorder.state === 'recording') {
-          mediaRecorder.stop();
-        }
+        recordedChunksVideo = [];
+        recordedChunksAudio = [];
+        dispatch('timeUp')
       }
     }, 1000);
-
-    await getMedia();
   });
 
   onDestroy(() => {
     clearInterval(interval);
-    if (videoStream) {
-      videoStream.getTracks().forEach(track => track.stop());
-    }
-    if (mediaRecorder) {
-      mediaRecorder.stop();
-    }
   });
 </script>
 
