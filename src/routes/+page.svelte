@@ -54,7 +54,7 @@
       body: JSON.stringify(setupData)
     });
     questions = await response.json();
-    console.log(questions)
+    console.log(questions);
   }
 
   function nextQuestion() {

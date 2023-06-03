@@ -33,11 +33,8 @@ export const POST = (async ({ request }) => {
     });
 
     console.log(response.data.choices[0].message)
-
-    const regex = /\d+\.\s*(\w+)/g;
-
-    const matches = response.data.choices[0].message.content.match(regex);
-    const questions = matches.map(match => match.replace(regex, '$1'));
+    
+    const questions = response.data.choices[0].message.content.split(/\n?\d+\.\s*/).filter(Boolean)
 
     console.log("SENT")
     console.log(questions)
