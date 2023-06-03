@@ -8,7 +8,8 @@
   export let timeLimit = 30; // in seconds
 
   let countdown = timeLimit;
-  
+  let answer = '';
+
   let interval;
   let videoStream;
   let audioStream;
@@ -96,7 +97,10 @@
     Camera On/Off
   </button>
 
-  <p class="text-3xl text-center w-4/5 mt-52">{question}</p>
+  <p class="text-3xl text-center w-4/5 mt-64 text-white">{question}</p>
+
+  <input class="mt-2 w-4/5 mx-auto rounded bg-gray-200 p-2 text-black" type="text" placeholder="Your answer..." bind:value={answer} />
+
   <div class="mt-[100px] h-10 w-10 text-center">
     <div class="text-white inline-block leading-10">{countdown}</div>
     <div class="relative w-10 h-10">
@@ -136,4 +140,3 @@
     }
   }
 </style>
-     
