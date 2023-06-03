@@ -24,6 +24,8 @@
 
   let answer = '';
 
+  let circleElement;
+
   
   async function getMedia() {
     try {
@@ -106,7 +108,12 @@
 
     window.addEventListener('keydown', e => {
       if (e.key === 'Enter') {
-        clearInterval(interval);
+        circleElement.classList.add('remove-animation');
+
+        // use setTimeout to remove the class immediately, causing the animation to restart
+        setTimeout(() => {
+          circleElement.classList.remove('remove-animation');
+        }, 1);
         dispatch('submitted', {answer, question});
         countdown = timeLimit;
         answer = '';
@@ -133,7 +140,7 @@
     <div class="text-white inline-block leading-10">{countdown}</div>
     <div class="relative w-10 h-10">
       <svg class="-mt-10">
-        <circle r="18" cx="20" cy="20" style="--timeLimit: {timeLimit}s"></circle>
+        <circle r="18" cx="20" cy="20" style="--timeLimit: {timeLimit}s" bind:this={circleElement}></circle>
       </svg>
     </div>
   </div>
@@ -166,6 +173,10 @@
     to {
       stroke-dashoffset: 113px;
     }
+  }
+
+  .reset-animation {
+    animation: none;
   }
 </style>
      
