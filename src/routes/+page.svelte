@@ -25,22 +25,27 @@
 
     currentPage = 'loading';
     console.log(setupData)
-    const response = await fetch('/api/generate-questions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(setupData)
-    });
+    try {
+      const response = await fetch('/api/generate-questions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(setupData)
+      });
 
-    
-    console.log(currentPage)
-    const data = await response.json();
-    console.log(data);
+      
+      console.log(currentPage)
+      const data = await response.json();
+      console.log(data);
 
-    questions = data.questions;
-    // questions = ["q1", "q2", "q3", "q4", "q5", "q6", "q7", "q8"];
-    currentPage = 'interview';
+      questions = data.questions;
+      // questions = ["q1", "q2", "q3", "q4", "q5", "q6", "q7", "q8"];
+      currentPage = 'interview';
+    } catch (error) {
+      console.error(error);
+      currentPage = 'error';
+    }
   }
 
 
