@@ -57,29 +57,33 @@
   }
 
   onMount(async () => {
-    const videoStream = await navigator.mediaDevices.getUserMedia({ video: true });
-    const audioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    try {
+      const videoStream = await navigator.mediaDevices.getUserMedia({ video: true });
+      const audioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
 
-    videoElement.srcObject = videoStream;
-    videoElement.play();
+      videoElement.srcObject = videoStream;
+      videoElement.play();
 
-    mediaRecorderVideo = new MediaRecorder(videoStream, {mimeType: 'video/webm; codecs=vp9'});
-    mediaRecorderAudio = new MediaRecorder(audioStream, {mimeType: 'audio/webm'});
+      mediaRecorderVideo = new MediaRecorder(videoStream, {mimeType: 'video/webm; codecs=vp9'});
+      mediaRecorderAudio = new MediaRecorder(audioStream, {mimeType: 'audio/webm'});
 
-    mediaRecorderVideo.ondataavailable = event => {
-      if (event.data.size > 0) {
-        recordedChunksVideo.push(event.data);
-      }
-    };
+      mediaRecorderVideo.ondataavailable = event => {
+        if (event.data.size > 0) {
+          recordedChunksVideo.push(event.data);
+        }
+      };
 
-    mediaRecorderAudio.ondataavailable = event => {
-      if (event.data.size > 0) {
-        recordedChunksAudio.push(event.data);
-      }
-    };
+      mediaRecorderAudio.ondataavailable = event => {
+        if (event.data.size > 0) {
+          recordedChunksAudio.push(event.data);
+        }
+      };
 
-    mediaRecorderVideo.start();
-    mediaRecorderAudio.start();
+      mediaRecorderVideo.start();
+      mediaRecorderAudio.start();
+    } catch (err) {
+      console.log(err);
+    }
 
     interval = setInterval(() => {
       if (countdown-- <= 0) {

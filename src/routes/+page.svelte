@@ -16,6 +16,8 @@
   let waiting = [];
   let counter = 0;
 
+  $: timeLimit = setupData.timeLimit ? parseInt(setupData.timeLimit) : 30;
+
   let i = 0;
 
   async function startInterview(event) {
@@ -74,13 +76,18 @@
         console.log(data);
         feedback[id] = data.feedback;
         waiting = waiting.filter(x => x !== id);
+        console.log(waiting);
       });
     nextQuestion();
   }
 
   function nextFeedback() {
-    if (i < feedback.length - 1) {
+    console.log(feedback)
+    if (i < Object.keys(feedback).length - 1) {
       i++;
+      console.log(i);
+    } else {
+      console.log(i, Object.keys(feedback).length - 1);
     }
   }
 </script>
@@ -91,10 +98,10 @@
     <Setup on:submit={startInterview} />
   {:else if currentPage === 'interview' && questions.length > 0}
     <InterviewQuestion {timeLimit} question={questions[currentQuestionIndex]} on:submitted={handleSubmit} />
-  {:else if currentPage === 'feedback'}
-    <Feedback apiFeedback={feedback[i]||"error"} question={questions[i]||"error"} answer={answers[i]||"error"}/>
-  {:else if currentPage === 'loading' || waiting}
+  {:else if currentPage === 'loading' || waiting.length > 0}
     <Loading/>
+  {:else if currentPage === 'feedback'}
+    <Feedback apiFeedback={feedback[i]||"error"} question={questions[i]||"error"} answer={answers[i]||"error"} on:next={nextFeedback}/>
   {:else}
     <h1 class="text-4xl text-white">Something went wrong.</h1>
   {/if}
