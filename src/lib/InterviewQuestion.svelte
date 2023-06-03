@@ -17,6 +17,7 @@
       if (countdown <= 0) {
         clearInterval(interval);
         dispatch('timeUp');
+        countdown = timeLimit;
       }
     }, 1000);
   });
