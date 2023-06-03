@@ -71,13 +71,26 @@
         answer,
         jobDescription: setupData.jobDescription
       })
-    }).then(res => res.json())
-      .then(data => {
+    })
+    .then(res => {
+      if (!res.ok) {
+        throw new Error(res.statusText);
+      }
+      return res.json();
+    })
+    .then(data => {
         console.log(data);
         feedback[id] = data.feedback;
         waiting = waiting.filter(x => x !== id);
         console.log(waiting);
-      });
+    })
+    .catch(error => {
+        console.error(error);
+        feedback[id] = "timeout error due to vercel serverless function timeout. sorry";
+        waiting = waiting.filter(x => x !== id);
+    });
+
+
     nextQuestion();
   }
 
