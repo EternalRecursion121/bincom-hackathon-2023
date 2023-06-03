@@ -24,15 +24,21 @@
     }
   }
 
-  function toggleCamera() {
+  async function toggleCamera() {
     cameraOn = !cameraOn;
 
     if (videoStream) {
-      videoStream.getVideoTracks()[0].enabled = cameraOn;
+      videoStream.getTracks().forEach(track => {
+        track.stop();
+      });
+    }
+
+    if (cameraOn) {
+      await getMedia();
     }
   }
 
-  onMount(() => {
+  onMount(async () => {
     interval = setInterval(() => {
       countdown -= 1;
       if (countdown <= 0) {
@@ -41,7 +47,7 @@
       }
     }, 1000);
 
-    getMedia();
+    await getMedia();
   });
 
   onDestroy(() => {
@@ -52,17 +58,21 @@
   });
 </script>
 
-<div class="flex flex-col items-center justify-center h-screen text-white">
-  <video class="absolute top-0 left-0 w-80 h-45 border-black border-4" autoplay muted playsinline bind:this={videoElement}></video>
-  <button class="absolute top-0 right-0 mt-28 mr-4" on:click={toggleCamera}>Toggle camera</button>
-  
-  <p class="text-3xl text-center w-4/5">{question}</p>
+<div class="flex flex-col items-center justify-center h-screen text-white relative">
+  {#if cameraOn}
+    <video class="absolute top-4 left-4 w-80 h-45 border-black border-4 rounded-lg shadow-lg" autoplay muted playsinline bind:this={videoElement}></video>
+  {/if}
+  <button class="absolute top-56 left-4 px-4 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-700 focus:outline-none" on:click={toggleCamera}>
+    Camera On/Off
+  </button>
+
+  <p class="text-3xl text-center w-4/5 mt-52">{question}</p>
   <div class="mt-[100px] h-10 w-10 text-center">
     <div class="text-white inline-block leading-10">{countdown}</div>
     <div class="relative w-10 h-10">
-        <svg class="-mt-10">
-          <circle r="18" cx="20" cy="20" style="--timeLimit: {timeLimit}s"></circle>
-        </svg>
+      <svg class="-mt-10">
+        <circle r="18" cx="20" cy="20" style="--timeLimit: {timeLimit}s"></circle>
+      </svg>
     </div>
   </div>
 </div>
