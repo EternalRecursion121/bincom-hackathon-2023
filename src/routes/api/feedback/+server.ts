@@ -20,10 +20,10 @@ const configuration = new Configuration({
 const openai = new OpenAIApi(configuration);
 
 export const POST = (async ({ request }) => {
-    const { jobDescrption, question, reponse } = await request.json();
+    const { jobDescription, question, answer } = await request.json();
 
     const messages = [{role: "system", content: "You are JobGPT- a helpful AI assistant designed to aid users in their interview preparation."},
-    {role: "user", content: createUserMessage(jobDescription, numQuestions)}]
+    {role: "user", content: createUserMessage(jobDescription, question, answer)}]
 
     console.log("RECIEVED");
 
@@ -35,13 +35,10 @@ export const POST = (async ({ request }) => {
         messages: messages,
     });
 
-    console.log(response.data.choices[0].message)
 
-    const questions = response.data.choices[0].message.content.split(/\n?\d+\.\s*/).filter(Boolean)
+    let feedback = response.data.choices[0].message.content;
 
-    console.log("SENT")
-    console.log(questions)
-    return json({ questions });
+    return json({ feedback });
 
   } catch (err) {
       console.error(err);

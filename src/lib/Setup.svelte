@@ -6,14 +6,14 @@
   const dispatch = createEventDispatcher();
 
   let jobDescription = '';
-  let numberOfQuestions = 1;
+  let numQuestions = 5;
   let manualEntry = false;
   let timeLimit = '30';
 
   function submitSetup() {
     setupData = {
       jobDescription,
-      numberOfQuestions,
+      numQuestions,
       manualEntry,
       timeLimit,
     };
@@ -30,7 +30,7 @@
 
     <div>
       <label for="number-of-questions" class="block text-lg">Number of Questions (1-15)</label>
-      <input id="number-of-questions" type="number" min="1" max="15" bind:value={numberOfQuestions} class="w-full px-2 py-1 mt-1 bg-gray-800 rounded-md text-white outline-none" />
+      <input id="number-of-questions" type="number" min="1" max="15" bind:value={numQuestions} class="w-full px-2 py-1 mt-1 bg-gray-800 rounded-md text-white outline-none" />
     </div>
 
     <!-- <div>

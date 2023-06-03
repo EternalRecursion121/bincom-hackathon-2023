@@ -11,13 +11,12 @@
   let currentQuestionIndex = 0;
   let timeLimit = 30;
   let questions = [];
+  let feedback = {};
+  let answers = []
+  let waiting = [];
+  let counter = 0;
 
-
-
-  onMount(async () => {
-    // Replace this with your actual API call.
-    
-  });
+  let i = 0;
 
   async function startInterview(event) {
     setupData = event.detail;
@@ -53,11 +52,36 @@
 
   function handleSubmit(event) {
     event.preventDefault();
-    answer = event.detail.answer;
-    question = event.detail.question;
+    const answer = event.detail.answer;
+    const question = event.detail.question;
 
+    answers.push(answer);
 
+    const id = counter++;
+    waiting.push(id);
+    fetch('/api/feedback', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        question,
+        answer,
+        jobDescription: setupData.jobDescription
+      })
+    }).then(res => res.json())
+      .then(data => {
+        console.log(data);
+        feedback[id] = data.feedback;
+        waiting = waiting.filter(x => x !== id);
+      });
     nextQuestion();
+  }
+
+  function nextFeedback() {
+    if (i < feedback.length - 1) {
+      i++;
+    }
   }
 </script>
 
@@ -66,10 +90,10 @@
   {#if currentPage === 'setup'}
     <Setup on:submit={startInterview} />
   {:else if currentPage === 'interview' && questions.length > 0}
-    <InterviewQuestion {timeLimit} question={questions[currentQuestionIndex]} on:submit={handleSubmit} />
+    <InterviewQuestion {timeLimit} question={questions[currentQuestionIndex]} on:submitted={handleSubmit} />
   {:else if currentPage === 'feedback'}
-    <Feedback/>
-  {:else if currentPage === 'loading'}
+    <Feedback apiFeedback={feedback[i]||"error"} question={questions[i]||"error"} answer={answers[i]||"error"}/>
+  {:else if currentPage === 'loading' || waiting}
     <Loading/>
   {:else}
     <h1 class="text-4xl text-white">Something went wrong.</h1>

@@ -22,7 +22,7 @@
   let recordedChunksVideo = [];
   let recordedChunksAudio = [];
 
-  let answer;
+  let answer = '';
 
   
   async function getMedia() {
@@ -92,18 +92,19 @@
         const audioBlob = new Blob(recordedChunksAudio, {type: 'audio/webm'});
 
         // Dispatch the event with the recorded data
-        dispatch('recorded', {video: videoBlob, audio: audioBlob});
         countdown = timeLimit;
         recordedChunksVideo = [];
         recordedChunksAudio = [];
-        dispatch('submitted', {answer});
+        dispatch('submitted', { answer, question });
         answer = '';
       }
     }, 1000);
 
     window.addEventListener('keydown', e => {
       if (e.key === 'Enter') {
-        dispatch('submitted', {answer});
+        clearInterval(interval);
+        dispatch('submitted', {answer, question});
+        countdown = timeLimit;
         answer = '';
       }
     });

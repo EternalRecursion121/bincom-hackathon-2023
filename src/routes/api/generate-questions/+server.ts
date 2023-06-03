@@ -34,7 +34,14 @@ export const POST = (async ({ request }) => {
 
     console.log(response.data.choices[0].message)
 
-    const questions = response.data.choices[0].message.content.split(/\n?\d+\.\s*/).filter(Boolean);
+    const content = response.data.choices[0].message.content;
+
+    // regex to match everything before the number with a dot
+    const regex = /.*?(?=\d+\.)/s;
+
+    const result = content.replace(regex, '');
+
+    const questions = result.split(/\n?\d+\.\s*/).filter(Boolean);
 
     console.log("SENT")
     console.log(questions)
