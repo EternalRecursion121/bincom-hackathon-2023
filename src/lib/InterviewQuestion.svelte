@@ -89,17 +89,24 @@
 
     interval = setInterval(() => {
       if (countdown-- <= 0) {
-        mediaRecorderVideo.stop();
-        mediaRecorderAudio.stop();
+        try {
+          mediaRecorderVideo.stop();
+          mediaRecorderAudio.stop();
 
-        // Create blobs from the recorded chunks
-        const videoBlob = new Blob(recordedChunksVideo, {type: 'video/webm'});
-        const audioBlob = new Blob(recordedChunksAudio, {type: 'audio/webm'});
+          // Create blobs from the recorded chunks
+          const videoBlob = new Blob(recordedChunksVideo, {type: 'video/webm'});
+          const audioBlob = new Blob(recordedChunksAudio, {type: 'audio/webm'});
 
-        // Dispatch the event with the recorded data
+          // Dispatch the event with the recorded data
+          
+          recordedChunksVideo = [];
+          recordedChunksAudio = [];
+        
+        } catch (err) {
+          console.log(err);
+        }
+
         countdown = timeLimit;
-        recordedChunksVideo = [];
-        recordedChunksAudio = [];
         dispatch('submitted', { answer, question });
         answer = '';
       }

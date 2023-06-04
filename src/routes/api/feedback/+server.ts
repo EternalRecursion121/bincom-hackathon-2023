@@ -27,12 +27,12 @@ export const POST = (async ({ request }) => {
 
     console.log("RECIEVED");
 
-    try {
+  try {
     // Extract the questions and audio data from the request body
     let response = await openai.createChatCompletion({
         model: "gpt-3.5-turbo",
         messages: messages,
-        max_tokens: 110,
+        max_tokens: 108,
     });
 
 
